@@ -28,7 +28,7 @@ df['Time Frame'] = df.index
 ## Merging committor probability file and OPs file together
 df3=pd.merge(tsne_df1,df, on='Time Frame')
 df4=pd.merge(df3,tsne_df2,on='Time Frame')
-df4=df4.iloc[:,[0,2,3,4,6,7,8]]
+df4=df4.iloc[:,[0,2,3,4,6]]
 df5=df4[(df4['Comittor Probability'] >=0) & (df4['Comittor Probability'] <=1)]
 train_data=df5.to_numpy()
 np.random.shuffle(train_data)
@@ -93,6 +93,8 @@ def plot_learning_curve(estimator, X, y, cv, train_sizes=np.linspace(0.1, 1.0, 1
 
     plt.legend(loc="best")
     plt.show()
+    
+## Cross validation learning curve
 from sklearn.model_selection import ShuffleSplit
 def plot_learning_curve(estimator, X, y, cv=None, train_sizes=np.linspace(0.1, 1.0, 10)):
     plt.figure(figsize=(10, 6))
@@ -134,14 +136,3 @@ xgb_r = xg.XGBRegressor(objective ='reg:linear',
 plot_learning_curve(xgb_r, X_train, Y_train, cv=5)
 import matplotlib.pyplot as plt
 axes = plt.gca()
-
-from yellowbrick.regressor import PredictionError
-visualizer = PredictionError(xgb_r)
-
-visualizer.fit(X_train, Y_train)
-visualizer.score(X_test, Y_test)
-visualizer.ax.set_xlim([0, 1])
-visualizer.ax.set_ylim([0,1])
-visualizer.ax.set_xlabel("True Committor Probability")
-visualizer.ax.set_ylabel("Calculated committor probability")
-visualizer.show(xlabel='$True Committor Probability$',ylabel='$Calculated committor probability$')
